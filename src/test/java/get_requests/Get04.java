@@ -7,6 +7,7 @@ import org.junit.Test;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.*;
+import static org.hamcrest.Matchers.hasSize;
 
 public class Get04 extends JsonPlaceHolderBaseUrl {
        /*
@@ -29,26 +30,29 @@ public class Get04 extends JsonPlaceHolderBaseUrl {
      */
 
     @Test
-    public void get04(){
+    public void get04() {
         //Set the URL
         // String url = "https://jsonplaceholder.typicode.com/todos";
-        spec.pathParam("first","todos");
+        spec.pathParam("first", "todos");
 
         //Set the expected data
 
         //Send the request and get the response
-        Response response = given().spec(spec).when().get("/{first}");
+        Response response = given().when().spec(spec).get("/{first}");
         response.prettyPrint();
 
         //Do Assertion
-
         response.
                 then().
                 statusCode(200).
                 contentType(ContentType.JSON).
-                body("id",hasSize(200),
-        "title",hasItem("quis eius est sint explicabo"),
-                        "userId",hasItems(2,7,9));
+                body("id", hasSize(200),//There should be 200 todos
+                        "title", hasItem("quis eius est sint explicabo"),//"quis eius est sint explicabo" should be one of the todos title
+                        "userId", hasItems(2, 7, 9));//2, 7, and 9 should be among the userIds;
+
+        //hasSize() ==> eleman sayısını assert eder.
+        //hasItem() ==> contains() methodu gibi objenin içerilip içerilmediğini assert eder.
+        //hasItems() ==> containsAll() methodu gibi birden fazla objenin içerilip içerilmediğini assert eder.
 
     }
 }
